@@ -158,6 +158,15 @@ open class XMLDecoder {
 
         /// Convert from "CODING_KEY" to "codingKey"
         case convertFromUppercase
+        
+        /// Convert from "Coding_Key" to "codingKey"
+        case convertFromSnakeCaseAndCapitalized
+        
+        /// Convert from "Coding-Key" to "codingKey"
+        case convertFromKebabCaseAndCapitalized
+        
+        /// Convert from "Coding_KEY" to "codingKey"
+        case convertFromUppercaseAndCapitalized
 
         /// Provide a custom conversion from the key in the encoded XML to the
         /// keys specified by the decoded types.

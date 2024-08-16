@@ -486,6 +486,24 @@ extension XMLDecoderImplementation {
             return XMLDecoder.KeyDecodingStrategy._convertFromUppercase
         case .convertFromKebabCase:
             return XMLDecoder.KeyDecodingStrategy._convertFromKebabCase
+        case .convertFromSnakeCaseAndCapitalized:
+            return {
+                XMLDecoder.KeyDecodingStrategy._convertFromSnakeCase(
+                    XMLDecoder.KeyDecodingStrategy._convertFromCapitalized($0)
+                )
+            }
+        case .convertFromKebabCaseAndCapitalized:
+            return {
+                XMLDecoder.KeyDecodingStrategy._convertFromKebabCase(
+                    XMLDecoder.KeyDecodingStrategy._convertFromCapitalized($0)
+                )
+            }
+        case .convertFromUppercaseAndCapitalized:
+            return {
+                XMLDecoder.KeyDecodingStrategy._convertFromUppercase(
+                    XMLDecoder.KeyDecodingStrategy._convertFromCapitalized($0)
+                )
+            }
         case .useDefaultKeys:
             return { key in key }
         case let .custom(converter):
