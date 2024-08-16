@@ -143,6 +143,13 @@ open class XMLEncoder {
         /// Lowercase all letters
         /// `oneTwoThree` becomes  `onetwothree`
         case lowercased
+        
+        /// `oneTwoThree` becomes  `One_Two_Three`
+        case convertToSnakeCaseAndCapitalized
+        
+        /// `oneTwoThree` becomes  `One-Two-Three`
+        case convertToKebabCaseAndCapitalized
+        
 
         /// Provide a custom conversion to the key in the encoded XML from the
         /// keys specified by the encoded types.
@@ -154,15 +161,15 @@ open class XMLEncoder {
         /// value will be present in the result.
         case custom((_ codingPath: [CodingKey]) -> CodingKey)
 
-        static func _convertToSnakeCase(_ stringKey: String) -> String {
-            return _convert(stringKey, usingSeparator: "_")
+        static func _convertToSnakeCase(_ stringKey: String, lowercaseElements: Bool = true) -> String {
+            return _convert(stringKey, usingSeparator: "_", lowercaseElements: lowercaseElements)
         }
 
-        static func _convertToKebabCase(_ stringKey: String) -> String {
-            return _convert(stringKey, usingSeparator: "-")
+        static func _convertToKebabCase(_ stringKey: String, lowercaseElements: Bool = true) -> String {
+            return _convert(stringKey, usingSeparator: "-", lowercaseElements: lowercaseElements)
         }
 
-        static func _convert(_ stringKey: String, usingSeparator separator: String) -> String {
+        static func _convert(_ stringKey: String, usingSeparator separator: String, lowercaseElements: Bool = true) -> String {
             guard !stringKey.isEmpty else {
                 return stringKey
             }
@@ -212,7 +219,11 @@ open class XMLEncoder {
             }
             words.append(wordStart..<searchRange.upperBound)
             let result = words.map { range in
-                stringKey[range].lowercased()
+                if lowercaseElements {
+                    return stringKey[range].lowercased()
+                } else {
+                    return String(stringKey[range])
+                }
             }.joined(separator: separator)
             return result
         }
@@ -440,6 +451,10 @@ private extension String {
             return XMLEncoder.KeyEncodingStrategy._convertToUppercased(self)
         case .lowercased:
             return XMLEncoder.KeyEncodingStrategy._convertToLowercased(self)
+        case .convertToKebabCaseAndCapitalized:
+            return XMLEncoder.KeyEncodingStrategy._convertToKebabCase(self, lowercaseElements: false)
+        case .convertToSnakeCaseAndCapitalized:
+            return XMLEncoder.KeyEncodingStrategy._convertToSnakeCase(self, lowercaseElements: false)
         }
     }
 }

@@ -63,6 +63,14 @@ struct XMLKeyedEncodingContainer<K: CodingKey>: KeyedEncodingContainerProtocol {
             let newKeyString = XMLEncoder.KeyEncodingStrategy
                 ._convertToLowercased(key.stringValue)
             return XMLKey(stringValue: newKeyString, intValue: key.intValue)
+        case .convertToKebabCaseAndCapitalized:
+            let newKeyString = XMLEncoder.KeyEncodingStrategy
+                ._convertToKebabCase(key.stringValue, lowercaseElements: false)
+            return XMLKey(stringValue: newKeyString, intValue: key.intValue)
+        case .convertToSnakeCaseAndCapitalized:
+            let newKeyString = XMLEncoder.KeyEncodingStrategy
+                ._convertToSnakeCase(key.stringValue, lowercaseElements: false)
+            return XMLKey(stringValue: newKeyString, intValue: key.intValue)
         }
     }
 
